@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from pretix.base.signals import order_placed
+from pretix.base.signals import order_paid
 from pretix.base.models import LogEntry
 import requests
 import json
@@ -17,7 +17,7 @@ def authenticate():
     else:
         return None
 
-@receiver(order_placed)
+@receiver(order_paid)
 def handle_order_creation(sender, order, **kwargs):
     token = authenticate()
     if token:
