@@ -13,6 +13,7 @@ maintainers = [
 ]
 
 dependencies = [
+    "python-decouple" 
 ]
 
 [project.entry-points."pretix.plugin"]

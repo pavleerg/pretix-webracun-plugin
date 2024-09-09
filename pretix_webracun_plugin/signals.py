@@ -3,11 +3,12 @@ from pretix.base.signals import order_placed
 from pretix.base.models import LogEntry
 import requests
 import json
+from decouple import config
 
 def authenticate():
     url = "https://www.app.webracun.com/rest/api/v1/login"
     headers = {'Content-Type': 'application/json'}
-    data = json.dumps({"username": "user", "password": "pass"})
+    data = json.dumps({"username": config('WEBRACUN_USER'), "password": config('WEBRACUN_PASS')})
     response = requests.post(url, data=data, headers=headers)
     
     if response.status_code == 200:
