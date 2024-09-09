@@ -9,11 +9,6 @@ def authenticate():
     headers = {'Content-Type': 'application/json'}
     data = json.dumps({"username": "user", "password": "pass"})
     response = requests.post(url, data=data, headers=headers)
-    print("-----------------------")
-    response_json = response.json() 
-    print(json.dumps(response_json, indent=4))      
-    print("-----------------------")
-
     
     if response.status_code == 200:
         token = response.json()['token']
