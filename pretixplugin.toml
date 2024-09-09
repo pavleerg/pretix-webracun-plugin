@@ -1,0 +1,5 @@
+[plugin]
+package = "pretix-webracun-plugin"
+modules = [ "pretix_webracun_plugin" ]
+marketplace_name = "webracun-plugin"
+

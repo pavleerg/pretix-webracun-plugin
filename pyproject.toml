@@ -1,0 +1,42 @@
+[project]
+name = "pretix-webracun-plugin"
+dynamic = ["version"]
+description = "A pretix plugin that integrates Webracun"
+readme = "README.rst"
+license = {text = "Apache"}
+keywords = ["pretix"]
+authors = [
+    {name = "Pavle", email = "pavle.ergovic@kset.org"},
+]
+maintainers = [
+    {name = "Pavle", email = "pavle.ergovic@kset.org"},
+]
+
+dependencies = [
+]
+
+[project.entry-points."pretix.plugin"]
+pretix_webracun_plugin = "pretix_webracun_plugin:PretixPluginMeta"
+
+[project.entry-points."distutils.commands"]
+build = "pretix_plugin_build.build:CustomBuild"
+
+[build-system]
+requires = [
+    "setuptools",
+    "pretix-plugin-build",
+]
+
+[project.urls]
+homepage = "GitHub repository URL"
+repository = "GitHub repository URL"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "pretix_webracun_plugin.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["pretix*"]
+namespaces = false
