@@ -30,7 +30,7 @@ def handle_order_creation(sender, order, **kwargs):
         data = {
             "paymentType": "Card", 
             "items": [
-                {"itemId": "1", "quantity": str(item_quantity)} 
+                {"itemId": "2", "quantity": str(item_quantity)} 
             ]
         }
         response = requests.post(url, json=data, headers=headers)
