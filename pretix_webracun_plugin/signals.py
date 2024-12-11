@@ -4,6 +4,7 @@ from pretix.base.models import LogEntry
 import requests
 import json
 from decouple import config
+from collections import defaultdict
 
 def authenticate():
     url = "https://www.app.webracun.com/rest/api/v1/login"
@@ -21,18 +22,30 @@ def authenticate():
 def handle_order_creation(sender, order, **kwargs):
     token = authenticate()
     if token:
-        item_quantity = order.positions.count() 
+        # Group items by webRacunID
+        items_grouped = defaultdict(int)
+
+        for position in order.positions.all():
+            metadata = position.item.meta_data
+            web_racun_id = metadata.get('webRacunID')
+            if web_racun_id:  # Only consider items with a valid webRacunID
+                items_grouped[web_racun_id] += 1
+
+        # Prepare items for the Webracun API
+        items = [{"itemId": web_racun_id, "quantity": str(quantity)} for web_racun_id, quantity in items_grouped.items()]
+
+        print(items)
+        
         url = "https://www.app.webracun.com/rest/api/v1/invoice"
         headers = {
             'Content-Type': 'application/json',
-            'Authority': token 
+            'Authority': token
         }
         data = {
-            "paymentType": "Card", 
-            "items": [
-                {"itemId": "2", "quantity": str(item_quantity)} 
-            ]
+            "paymentType": "Card",
+            "items": items
         }
+
         response = requests.post(url, json=data, headers=headers)
 
         if response.status_code == 200:
@@ -41,7 +54,7 @@ def handle_order_creation(sender, order, **kwargs):
                 content_object=order,
                 action_type=f"Invoice to Webracun {invoice_id} successfully created.",
             )
-            print(f"Invoice {invoice_id} created successfully with quantity {item_quantity}.")
+            print(f"Invoice {invoice_id} created successfully with items: {items}.")
         else:
             LogEntry.objects.create(
                 content_object=order,
