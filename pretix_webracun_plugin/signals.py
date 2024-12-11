@@ -28,14 +28,19 @@ def handle_order_creation(sender, order, **kwargs):
         for position in order.positions.all():
             metadata = position.item.meta_data
             web_racun_id = metadata.get('webRacunID')
-            if web_racun_id:  # Only consider items with a valid webRacunID
+            
+            if web_racun_id and web_racun_id != '-1':  # Exclude items with webRacunID = -1
                 items_grouped[web_racun_id] += 1
 
         # Prepare items for the Webracun API
         items = [{"itemId": web_racun_id, "quantity": str(quantity)} for web_racun_id, quantity in items_grouped.items()]
 
         print(items)
-        
+
+        if not items:
+            print(f"No valid items to send for order {order.id}. Skipping Webracun invoice creation.")
+            return
+
         url = "https://www.app.webracun.com/rest/api/v1/invoice"
         headers = {
             'Content-Type': 'application/json',
