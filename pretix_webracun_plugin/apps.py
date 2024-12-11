@@ -16,7 +16,7 @@ class PluginApp(PluginConfig):
     class PretixPluginMeta:
         name = gettext_lazy("WebRacunPlugin")
         author = "Pavle"
-        description = gettext_lazy("A pretix plugin that integrates Webracun")
+        description = gettext_lazy("A pretix plugin that integrates Webracun v2.0")
         visible = True
         version = __version__
         category = "INTEGRATION"
